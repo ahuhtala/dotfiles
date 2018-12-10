@@ -4,6 +4,22 @@
 echo "Updating package lists..."
 sudo apt-get update
 
+echo ''
+echo "Install Build essentials..."
+sudo apt-get install build-essential -y
+
+echo ''
+echo "Install SSH..."
+sudo apt install ssh -y
+
+echo ''
+echo "Install VSFTPD..."
+sudo apt-get install vsftpd -y
+
+echo ''
+echo "Install Screenfetch..."
+sudo apt-get install screenfetch -y
+
 # zsh install
 which zsh > /dev/null 2>&1
 if [[ $? -eq 0 ]] ; then
@@ -97,9 +113,9 @@ echo "Now installing Midnight commander..."
 echo ''
 sudo apt-get install mc -y
 
-# Speedtest-cli, pip and jq install
+# tmux, pip and jq install
 echo ''
-echo "Now installing Speedtest-cli, pip, tmux and jq..."
+echo "Now installing pip, tmux, speedtest, jq..."
 echo ''
 sudo apt-get install jq tmux python-pip -y
 sudo pip install --upgrade pip
@@ -114,13 +130,13 @@ mv dircolors.256dark .dircolors
 
 # Pull down personal dotfiles
 echo ''
-read -p "Do you want to use jldeen's dotfiles? y/n" -n 1 -r
+read -p "Do you want to use dotfiles? y/n" -n 1 -r
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     echo ''
-	echo "Now pulling down jldeen dotfiles..."
-	git clone https://github.com/jldeen/dotfiles.git ~/.dotfiles
+	echo "Now pulling down dotfiles..."
+	git clone https://github.com/ahuhtala/dotfiles.git ~/.dotfiles
 	echo ''
 	cd $HOME/.dotfiles && echo "switched to .dotfiles dir..."
 	echo ''
@@ -129,13 +145,13 @@ then
 	echo "Now configuring symlinks..." && $HOME/.dotfiles/script/bootstrap
     if [[ $? -eq 0 ]]
     then
-        echo "Successfully configured your environment with jldeen's dotfiles..."
+        echo "Successfully configured your environment with dotfiles..."
     else
-        echo "jldeen's dotfiles were not applied successfully..." >&2
+        echo "Dotfiles were not applied successfully..." >&2
 fi
 else 
 	echo ''
-    echo "You chose not to apply jldeen's dotfiles. You will need to configure your environment manually..."
+    echo "You chose not to apply dotfiles. You will need to configure your environment manually..."
 	echo ''
 	echo "Setting defaults for .zshrc and .bashrc..."
 	echo ''
@@ -192,4 +208,25 @@ else
 fi
 
 echo ''
-echo '	Badass WSL terminal installed! Please reboot your computer for changes to be made.'
+read -p "Do you want to install Node with NVM (Node version manager)? y/n" -n 1 -r
+echo ''
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+	echo "Installing NVM.."
+    sh -c "$(curl -fsSL  https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh)"
+    command -v nvm
+    if [[ $? -eq 0 ]]
+    then
+        echo "Successfully installed NVM now installing Node..."
+        nvm install node
+    else
+        echo "NVM not successfully installed.." >&2
+fi 
+else 
+    echo "You chose not to install NVM"
+fi
+
+
+echo ''
+echo '	WSL terminal installed! Please reboot your computer for changes to be made.'
+
